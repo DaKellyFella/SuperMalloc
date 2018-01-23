@@ -50,13 +50,13 @@ main(void)
 
 #if LG_SIZEOF_PTR == 3
 	alignment = UINT64_C(0x8000000000000000);
-	size      = UINT64_C(0x8000000000000000);
+	size      = UINT64_C(0x8000000000000000) - 1;
 #else
 	alignment = 0x80000000LU;
 	size      = 0x80000000LU;
 #endif
 	set_errno(0);
-	p = aligned_alloc(alignment, size);
+	p = aligned_alloc(alignment, size > 9223372036854775807 ? 9223372036854775807 : size);
 	if (p != NULL || get_errno() != ENOMEM) {
 		malloc_printf(
 		    "Expected error for aligned_alloc(%zu, %zu)\n",
@@ -71,7 +71,7 @@ main(void)
 	size      = 0x84000001LU;
 #endif
 	set_errno(0);
-	p = aligned_alloc(alignment, size);
+	p = aligned_alloc(alignment, size > 9223372036854775807 ? 9223372036854775807 : size);
 	if (p != NULL || get_errno() != ENOMEM) {
 		malloc_printf(
 		    "Expected error for aligned_alloc(%zu, %zu)\n",
@@ -84,7 +84,7 @@ main(void)
 	size = 0xfffffff0LU;
 #endif
 	set_errno(0);
-	p = aligned_alloc(alignment, size);
+	p = aligned_alloc(alignment, size > 9223372036854775807 ? 9223372036854775807 : size);
 	if (p != NULL || get_errno() != ENOMEM) {
 		malloc_printf(
 		    "Expected error for aligned_alloc(&p, %zu, %zu)\n",
